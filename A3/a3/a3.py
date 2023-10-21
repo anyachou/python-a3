@@ -28,7 +28,7 @@ class FancyGameView(AbstractGrid):
 	# root.mainloop()
 
 def play_game(root: tk.Tk, maze_file: str) -> None:
-	test_frame = tk.Frame(root, width="200", height="200", background="red")
+	test_frame = tk.Canvas(root, width="200", height="200", background="red")
 	test_frame.pack(side=tk.TOP)
 
 
