@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog
 from typing import Callable
-from model import SokobanModel, Tile, Entity
+from model import SokobanModel, Tile, Entity, COIN
 from a2_support import *
 from a3_support import *
 
@@ -22,6 +22,8 @@ class FancyGameView(AbstractGrid):
 				self.annotate_position((i, j), text)
 
 	def get_image_name(self, marker):
+		if marker.get_type() == COIN:
+			return 'images/$.png'
 		if marker.get_type() == WALL:
 			return 'images/W.png'
 		elif marker.get_type() == FLOOR:
@@ -52,11 +54,23 @@ class FancyGameView(AbstractGrid):
 				self.create_rectangle(*bbox)
 				# display floor, wall, goal
 				if marker is not None:
-					image_name = self.get_image_name(marker)
+					position = (i, j)
 					size = self.get_cell_size()
+					image_name = self.get_image_name(marker)
 					image = get_image(image_name, size, self._cache)
-					midpoint = self.get_midpoint((i, j))
+					midpoint = self.get_midpoint(position)
 					self.create_image(midpoint, image=image)
+
+					if position in entities.keys():
+						entity_symbol = entities[(i, j)]
+						entity_name = self.get_image_name(entity_symbol)
+						entity = get_image(entity_name, size, self._cache)
+						self.create_image(self.get_midpoint(position), image=entity)
+
+					if player_position == position:
+						player = get_image('images/P.png', size, self._cache)
+						self.create_image(self.get_midpoint(position), image=player)
+
 
 
 class FancyStatsView(AbstractGrid):
@@ -96,7 +110,8 @@ class ExtraFancySokoban:
 		pass
 
 def play_game(root: tk.Tk, maze_file: str) -> None:
-	fancygameview = FancyGameView(root, (7,8), (MAZE_SIZE, MAZE_SIZE))
+	fancygameview = FancyGameView(root, (7,8),
+	                              (MAZE_SIZE, MAZE_SIZE))
 	sokobanModel = SokobanModel(maze_file)
 	fancygameview.display(sokobanModel.get_maze(),sokobanModel.get_entities(),
 	                      sokobanModel.get_player_position())
@@ -107,7 +122,7 @@ def main() -> None:
 	root = tk.Tk()
 	root.geometry("450x450")
 	play_game(root,
-	          "/Users/anya.c/Desktop/CEES7030/A3/a3/maze_files/maze1.txt")
+	          "/Users/anya.c/Desktop/CEES7030/A3/a3/maze_files/coin_maze.txt")
 
 if __name__ == "__main__":
 	main()
