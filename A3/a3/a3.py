@@ -7,22 +7,21 @@ from a3_support import *
 
 class FancyGameView(AbstractGrid):
 	"""show the game map"""
-
 	def __init__(self, master: tk.Tk, dimensions: tuple[int, int],
 	             size: tuple[int, int], **kwargs) -> None:
 		super().__init__(master, dimensions, size)
-		self._cache = {}  # save images
+		self._cache = {} #save images
 
 	def initial_redraw(self, board_state: list[list[Union[str, None]]]) -> \
 			None:
-		""" Draw the initial state using text annotations. """
-		self.clear()
-		for i, row in enumerate(board_state):
-			for j, marker in enumerate(row):
-				text = marker if marker is not None else ''
-				bbox = self.get_bbox((i, j))
-				self.create_rectangle(*bbox)
-				self.annotate_position((i, j), text)
+			""" Draw the initial state using text annotations. """
+			self.clear()
+			for i, row in enumerate(board_state):
+				for j, marker in enumerate(row):
+					text = marker if marker is not None else ''
+					bbox = self.get_bbox((i, j))
+					self.create_rectangle(*bbox)
+					self.annotate_position((i, j), text)
 
 	def get_image_name(self, marker):
 		if marker.get_type() == WALL:
@@ -44,81 +43,63 @@ class FancyGameView(AbstractGrid):
 		elif marker.get_type() == STRENGTH_POTION:
 			return 'images/S.png'
 
-	def display(self, maze: Grid, entities: Entities, player_position: Position):
+	def display(self, maze: Grid, entities: Entities, player_position:
+	Position):
 		"""use images to represent game elements"""
 		self.clear()
-
-		for i, row in enumerate(maze):
+		for i, row in enumerate(
+				maze):  # Assuming maze is similar to board_state in structure
 			for j, marker in enumerate(row):
 				bbox = self.get_bbox((i, j))
 				self.create_rectangle(*bbox)
 
-				# Check if there's an entity at the current position
-				entity = entities.get((i, j), None)
-				print(entities.get)
-				if entity:
-					image_name = self.get_image_name(entity)
-				elif (i, j) == player_position:
-					image_name = self.get_image_name(PLAYER)
-				elif marker is not None:
+				if marker is not None:
 					image_name = self.get_image_name(marker)
-				else:
-					image_name = None
-
-				# Display the maze (including tile, wall, goal)
-				if image_name:
 					size = self.get_cell_size()
 					image = get_image(image_name, size, self._cache)
 					midpoint = self.get_midpoint((i, j))
 					self.create_image(midpoint, image=image)
 
 class FancyStatsView(AbstractGrid):
-	def __init__(self, master: tk.Tk) -> None:
+	def __init__(self, master: tk.Tk)-> None:
 		pass
-
-	def draw_stats(selfself, moves_remaining: int, strength: int, money: int) \
+	def draw_stats(selfself, moves_remaining:int, strength: int, money: int)\
 			-> None:
 		pass
 
 class Shop(tk.Frame):
-	def __init__(self, master: tk.Frame) -> None:
+	def __init__(self, master: tk.Frame)-> None:
 		pass
-
-	def create_buyable_item(self, item: str, amount: int, callback: Callable[[],
-	None]) -> None:
+	def create_buyable_item(self, item:str, amount:int, callback: Callable[[],
+	None])->None:
 		pass
 
 class FancySokobanView:
-	def __init__(self, master: tk.Tk, dismensions: tuple[int, int],
-	             size: tuple[int,
-	             int]) -> None:
+	def __init__(self, master:tk.Tk,dismensions:tuple[int,int],size:tuple[int,
+	int]) -> None:
 		pass
-
 	def display_game(selfself, maze: Grid, entities: Entities, player_position:
 	Position) -> None:
 		pass
 
-	def display_stats(selfself, moves: int, strength: int, money: int) -> None:
+	def display_stats(selfself, moves:int, strength: int, money: int)-> None:
 		pass
-
-	def create_shop_items(self, shop_items: dict[str, int],
-	                      button_callback: Callable[[str], None]) -> None:
+	def create_shop_items(self, shop_items: dict[str,int],
+	                      button_callback:Callable[[str],None])->None:
 		pass
 
 class ExtraFancySokoban:
-	def __init__(self, master: tk.Tk, maze_file: str) -> None:
+	def __init__(self, master:tk.Tk, maze_file: str)-> None:
 		pass
-
 	def redraw(self):
 		pass
-
-	def handle_keypress(selfself, event: tk.Event) -> None:
+	def handle_keypress(selfself,event:tk.Event) -> None:
 		pass
 
 def play_game(root: tk.Tk, maze_file: str) -> None:
-	fancygameview = FancyGameView(root, (7, 8), (MAZE_SIZE, MAZE_SIZE))
+	fancygameview = FancyGameView(root, (7,8), (MAZE_SIZE, MAZE_SIZE))
 	sokobanModel = SokobanModel(maze_file)
-	fancygameview.display(sokobanModel.get_maze(), sokobanModel.get_entities(),
+	fancygameview.display(sokobanModel.get_maze(),sokobanModel.get_entities(),
 	                      sokobanModel.get_player_position())
 	fancygameview.pack()
 	root.mainloop()
