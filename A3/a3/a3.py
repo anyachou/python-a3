@@ -7,7 +7,7 @@ from a3_support import *
 
 class FancyGameView(AbstractGrid):
 	"""show the game map"""
-	def __init__(self, master: tk.Tk, dimensions: tuple[int, int],
+	def __init__(self, master: tk.Tk | tk.Tk, dimensions: tuple[int, int],
 	             size: tuple[int, int], **kwargs) -> None:
 		super().__init__(master, dimensions, size)
 		self._cache = {}  # save images
@@ -22,6 +22,7 @@ class FancyGameView(AbstractGrid):
 				self.annotate_position((i, j), text)
 
 	def get_image_name(self, marker):
+		"""check the elements in the map"""
 		if marker.get_type() == COIN:
 			return 'images/$.png'
 		if marker.get_type() == WALL:
@@ -60,22 +61,23 @@ class FancyGameView(AbstractGrid):
 					image = get_image(image_name, size, self._cache)
 					midpoint = self.get_midpoint(position)
 					self.create_image(midpoint, image=image)
-
+					# display entities, including potions
 					if position in entities.keys():
 						entity_symbol = entities[(i, j)]
 						entity_name = self.get_image_name(entity_symbol)
 						entity = get_image(entity_name, size, self._cache)
 						self.create_image(self.get_midpoint(position), image=entity)
-
+					# display the player position
 					if player_position == position:
 						player = get_image('images/P.png', size, self._cache)
 						self.create_image(self.get_midpoint(position), image=player)
-
-
-
 class FancyStatsView(AbstractGrid):
-	def __init__(self, master: tk.Tk)-> None:
-		pass
+	"""Display the game of stats"""
+	def __init__(self, master: tk.Tk | tk.Frame) -> None:
+		"""Initializes the FancyStatsView."""
+		super().__init__(master, (3, 3),
+		                 (MAZE_SIZE + SHOP_WIDTH, STATS_HEIGHT))
+		self._cache = {}
 	def draw_stats(self, moves_remaining:int, strength: int, money: int)\
 			-> None:
 		pass
