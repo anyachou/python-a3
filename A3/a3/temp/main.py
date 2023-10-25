@@ -1,5 +1,6 @@
 import tkinter as tk
 from a3_support import *
+from model import *
 
 class Game():
 
@@ -10,8 +11,11 @@ class Game():
     maze_frame = None
     shop_frame = None
     stat_frame = None
+    sokoban_model = None
 
-    def __init__(self):
+    def __init__(self, maze_file_path: str):
+        self.sokoban_model = SokobanModel(maze_file_path)
+
         self.width = str(MAZE_SIZE + SHOP_WIDTH)
         self.height = str(MAZE_SIZE + BANNER_HEIGHT + STATS_HEIGHT)
 
