@@ -78,9 +78,27 @@ class FancyStatsView(AbstractGrid):
 		super().__init__(master, (3, 3),
 		                 (MAZE_SIZE + SHOP_WIDTH, STATS_HEIGHT))
 		self._cache = {}
-	def draw_stats(self, moves_remaining:int, strength: int, money: int)\
-			-> None:
-		pass
+		self._title_font = ('Arial', 14, 'bold')
+
+		# Add 'Player Stats' in the first row
+		self.annotate_position((0, 1), "Player Stats",
+		                                      font=self._title_font)
+
+		# Adding titles for stats in the second row
+		self.annotate_position((1, 0), "Moves remaining:")
+		self.annotate_position((1, 1), "Strength:")
+		self.annotate_position((1, 2), "Money:")
+
+		# Initialize values for stats in the third row (these will be updated later)
+		self._moves_label = self.annotate_position((2, 0), "")
+		self._strength_label = self.annotate_position((2, 1), "")
+		self._money_label = self.annotate_position((2, 2), "")
+
+	def draw_stats(self, moves_remaining: int, strength: int, money: int) -> None:
+		# Updating stats values
+		self.itemconfig(self._moves_label, text=str(moves_remaining))
+		self.itemconfig(self._strength_label, text=str(strength))
+		self.itemconfig(self._money_label, text=str(money))
 
 class Shop(tk.Frame):
 	def __init__(self, master: tk.Frame)-> None:
@@ -118,6 +136,9 @@ def play_game(root: tk.Tk, maze_file: str) -> None:
 	fancygameview.display(sokobanModel.get_maze(),sokobanModel.get_entities(),
 	                      sokobanModel.get_player_position())
 	fancygameview.pack()
+	fancystatsview = FancyStatsView(root)
+	fancystatsview.draw_stats(5, 10, 100)
+	fancystatsview.pack()
 	root.mainloop()
 
 def main() -> None:
@@ -125,6 +146,7 @@ def main() -> None:
 	root.geometry("450x450")
 	play_game(root,
 	          "/Users/anya.c/Desktop/CEES7030/A3/a3/maze_files/coin_maze.txt")
+
 
 if __name__ == "__main__":
 	main()
