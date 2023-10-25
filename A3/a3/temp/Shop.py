@@ -22,6 +22,9 @@ class Shop(tk.Frame):
         self.items[item_name] = amount
 
     def display(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+
         label = tk.Label(self, text='Shop', anchor='n', font=('Arial', 20, 'bold'))
         label.grid(row=0, column=0)
         init_row = 1

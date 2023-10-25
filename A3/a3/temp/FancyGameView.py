@@ -40,7 +40,6 @@ class FancyGameView(AbstractGrid):
 
     def display(self, maze: Grid, entities: Entities, player_position: Position):
         """use images to represent game elements"""
-        self.clear()
         for i, row in enumerate(maze):  # Assuming maze is similar to board_state in structure
             for j, marker in enumerate(row):
                 bbox = self.get_bbox((i, j))

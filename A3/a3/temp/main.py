@@ -16,6 +16,11 @@ class Game():
     shop_frame = None
     stat_frame = None
     sokoban_model = None
+    game_view = None
+    stat_view = None
+    banner_view = None
+    shop_view = None
+    player = None
 
     def __init__(self, maze_file_path: str):
         self.sokoban_model = SokobanModel(maze_file_path)
@@ -34,6 +39,8 @@ class Game():
         self.shop_frame.place(x=MAZE_SIZE, y=BANNER_HEIGHT)
         self.stat_frame = tk.Frame(self.root, background='blue', width=self.width, height=STATS_HEIGHT)
         self.stat_frame.place(x=0, y=MAZE_SIZE + BANNER_HEIGHT)
+        self.player = self.sokoban_model.player
+
 
     def get_potion(self, type: str) -> Potion:
         if type == STRENGTH_POTION:
@@ -43,21 +50,40 @@ class Game():
         elif type == FANCY_POTION:
             return FancyPotion()
 
-    def play_game(self):
-        player = self.sokoban_model.player
-        game_view = FancyGameView(self.maze_frame, self.sokoban_model.get_dimensions(), (MAZE_SIZE, MAZE_SIZE))
-        game_view.display(self.sokoban_model.get_maze(), self.sokoban_model.get_entities(), self.sokoban_model.get_player_position())
-        stat_view = FancyStatsView(self.stat_frame)
-        stat_view.draw_stats(player.get_moves_remaining(), player.get_strength(), player.get_money())
-        stat_view.display()
-        banner_view = Banner(self.banner_frame, (1,1), (MAZE_SIZE + SHOP_WIDTH, BANNER_HEIGHT))
-        banner_view.display((0,0))
-        shop_view = Shop(self.shop_frame)
+    def game_init(self):
+        self.game_view = FancyGameView(self.maze_frame, self.sokoban_model.get_dimensions(), (MAZE_SIZE, MAZE_SIZE))
+        self.game_view.display(self.sokoban_model.get_maze(), self.sokoban_model.get_entities(), self.sokoban_model.get_player_position())
+        self.stat_view = FancyStatsView(self.stat_frame)
+        self.stat_view.draw_stats(self.player.get_moves_remaining(), self.player.get_strength(), self.player.get_money())
+        self.stat_view.display()
+        self.banner_view = Banner(self.banner_frame, (1,1), (MAZE_SIZE + SHOP_WIDTH, BANNER_HEIGHT))
+        self.banner_view.display((0,0))
+        self.shop_view = Shop(self.shop_frame)
         for item in self.sokoban_model.get_shop_items():
             potion_effect = self.get_potion(item).effect()
-            player_function = player.apply_effect(potion_effect)
-            shop_view.create_buyable_item(item, self.sokoban_model.get_shop_items()[item], player_function)
-        shop_view.display()
-        self.root.mainloop()
+            player_function = self.player.apply_effect(potion_effect)
+            self.shop_view.create_buyable_item(item, self.sokoban_model.get_shop_items()[item], player_function)
+        self.shop_view.display()
 
-Game('../maze_files/coin_maze.txt').play_game()
+    def game_console(self):
+        # self.stat_view.draw_stats(1,2,3)
+        self.stat_view.display()
+
+    def play_game(self):
+        self.root.after(5000, self.stat_view.draw_stats(1,2,3))
+        self.root.after(5000, self.play_game)
+        self.game_console()
+
+    def get_game(self):
+        return self
+
+    def get_root(self):
+        return self.root
+
+root = Game('../maze_files/coin_maze.txt').get_game()
+root.game_init()
+root.play_game()
+root.get_root().mainloop()
+
+
+
