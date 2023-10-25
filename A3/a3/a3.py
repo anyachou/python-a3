@@ -145,7 +145,7 @@ def main() -> None:
 	root = tk.Tk()
 	root.geometry("450x450")
 	play_game(root,
-	          "/Users/anya.c/Desktop/CEES7030/A3/a3/maze_files/coin_maze.txt")
+	          "maze_files/coin_maze.txt")
 
 
 if __name__ == "__main__":

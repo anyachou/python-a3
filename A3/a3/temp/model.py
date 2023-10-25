@@ -518,3 +518,7 @@ class SokobanModel:
         """
         potion = self._entities.pop(position)
         self._player.apply_effect(potion.effect())
+
+    @property
+    def player(self):
+        return self._player
