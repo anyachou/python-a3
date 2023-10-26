@@ -77,6 +77,9 @@ class Game():
     def get_root(self):
         return self.root
 
+    def set_root(self, master: tk.Tk):
+        self.root = master
+
 root = Game('../maze_files/coin_maze.txt').get_game()
 root.game_init()
 root.play_game()
