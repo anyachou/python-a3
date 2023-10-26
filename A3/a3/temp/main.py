@@ -59,10 +59,7 @@ class Game():
         self.banner_view = Banner(self.banner_frame, (1,1), (MAZE_SIZE + SHOP_WIDTH, BANNER_HEIGHT))
         self.banner_view.display((0,0))
         self.shop_view = Shop(self.shop_frame)
-        for item in self.sokoban_model.get_shop_items():
-            potion_effect = self.get_potion(item).effect()
-            player_function = self.player.apply_effect(potion_effect)
-            self.shop_view.create_buyable_item(item, self.sokoban_model.get_shop_items()[item], player_function)
+        self.shop_view.create_shop_items(self.sokoban_model.get_shop_items(), self.player)
         self.shop_view.display()
 
     def game_console(self):

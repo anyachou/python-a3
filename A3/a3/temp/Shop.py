@@ -10,16 +10,25 @@ class Shop(tk.Frame):
     def __init__(self, master: tk.Frame) -> None:
         super().__init__(master)
 
-    # callback = SokobanModel().get_shop_items()
     def create_buyable_item(self, item: str, amount: int, callback: Callable[[], None]) -> None:
-        item_name = ''
-        if item == MOVE_POTION:
-            item_name = 'Move Potion'
-        elif item == STRENGTH_POTION:
-            item_name = 'Strengh Potion'
-        elif item == FANCY_POTION:
-            item_name = 'Fancy Potion'
-        self.items[item_name] = amount
+        self.items[item + '_' + str(amount)] = callback
+
+    def create_shop_items(self, items: dict[str, int], player: Player):
+        for item in items.keys():
+            item_name = ''
+            potion = None
+            if item == MOVE_POTION:
+                item_name = 'Move Potion'
+                potion = MovePotion()
+            elif item == STRENGTH_POTION:
+                item_name = 'Strengh Potion'
+                potion = StrengthPotion()
+            elif item == FANCY_POTION:
+                item_name = 'Fancy Potion'
+                potion = FancyPotion()
+
+            amount = items[item]
+            self.create_buyable_item(item_name, amount, lambda: player.apply_effect(potion.effect()))
 
     def display(self):
         for widget in self.winfo_children():
