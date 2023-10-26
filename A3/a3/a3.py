@@ -148,5 +148,6 @@ def main() -> None:
 	          "maze_files/coin_maze.txt")
 
 
+
 if __name__ == "__main__":
 	main()
